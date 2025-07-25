@@ -137,13 +137,13 @@
 
             var names = {
                 "stars": [
-                    ["♄︎", "a", ""],
-                    ["☉︎︎︎︎", "d", ""],
-                    ["♂", "c", ""],
-                    ["♃", "as", ""],
-                    ["♀", "fs", ""],
-                    ["☾", "gs", ""],
-                    ["☿", "e", ""],
+                    ["♄︎", "a", "A"],
+                    ["☉︎︎︎︎", "d", "D"],
+                    ["♂", "c", "C"],
+                    ["♃", "as", "A#"],
+                    ["♀", "fs", "F#"],
+                    ["☾", "gs", "G#"],
+                    ["☿", "e", "E"],
                 ],
                 "eheyeh": [
                     ["א", "e", "eh"],
@@ -273,7 +273,7 @@
         <center>
             <br/>
          <div class="names">
-            <a href="javascript:meditation('stars')" style="font-size:2em;font-weight:900">7 Stars Meditation</a><br/>
+            <a href="#" id="playLink" style="font-size:2em;font-weight:900">7 Stars Meditation</a><br/>
          </div>
          <br/><br/>
 
@@ -306,5 +306,10 @@
     </body>
     <script>
         //meditation('stars');
+        // Attach to actual user interaction
+        document.getElementById('playLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+            meditation("stars");
+        });
     </script>
 </html>
