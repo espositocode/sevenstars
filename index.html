@@ -1,0 +1,310 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+        <style>
+            .circle:hover {
+                fill: #000;
+            }
+            #meditation {
+                position: absolute;
+                left: 0px;
+                right: 0px;
+                top: 0px;
+                bottom: 0px;
+                display: none;
+            }
+
+            #letter {
+                font-size: 15em;
+                text-align: center;
+                color: #fff;
+            }
+
+            #pronunciation {
+                font-size: 2em;
+                text-align: center;
+            }
+
+            .names {
+                padding-top: 2em;
+                text-align: center;
+            }
+
+            .noselect {
+                -webkit-touch-callout: none; /* iOS Safari */
+                  -webkit-user-select: none; /* Safari */
+                   -khtml-user-select: none; /* Konqueror HTML */
+                     -moz-user-select: none; /* Old versions of Firefox */
+                      -ms-user-select: none; /* Internet Explorer/Edge */
+                          user-select: none; /* Non-prefixed version, currently
+                                                supported by Chrome, Edge, Opera and Firefox */
+            }
+
+            .sign {
+                font-size:8em;
+                display:inline-block;
+                margin:.1em;
+            }
+        </style>
+        <script>
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            // Create an oscillator node
+            var oscillator = null;
+
+            function playTone(frequency) {
+                oscillator = audioCtx.createOscillator();
+
+                // Set the oscillator type to sine (pure tone)
+                oscillator.type = 'sine';
+
+                // Create a new audio context
+                // Set the frequency (in hertz)
+                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+                // Connect the oscillator to the destination (speakers)
+                oscillator.connect(audioCtx.destination);
+
+                // Start the oscillator
+                oscillator.start();
+
+                // // Stop the oscillator after the given duration (in seconds)
+                oscillator.stop(audioCtx.currentTime + 60);
+            }
+
+            function stop() {
+                if (oscillator) {
+                    try {
+                        oscillator.stop(0);
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
+            }
+
+            var tones = {
+                "c": 128.82,
+                "cs": 136.09,
+                "d": 144.18,
+                "ds": 152.75,
+                "e": 161.83,
+                "f": 171.45,
+                "fs": 181.65,
+                "g": 192.45,
+                "gs": 203.89,
+                "a": 216.01,
+                "as": 228.85,
+                "b": 242.46,
+            }
+
+            var notes = {
+                "c": "red",
+                "cs": "red-orange",
+                "d": "orange",
+                "ds": "orange-yellow",
+                "e": "yellow",
+                "f": "yellow-green",
+                "fs": "green",
+                "g": "green-blue",
+                "gs": "blue",
+                "a": "blue-violet",
+                "as": "violet",
+                "b": "violet-red",
+            }
+            var colors = {
+                "red": "#AC2721",
+                "red-orange": "#B92D1C",
+                "orange": "#E65C29",
+                "orange-yellow": "#E78732",
+                "yellow": "#F5E652",
+                "yellow-green": "#75AC4A",
+                "green": "#397351",
+                "green-blue": "#30608D",
+                "blue": "#264AA9",
+                "blue-violet": "#3C409E",
+                "violet": "#3C2070",
+                "violet-red": "#5B206B",
+            }
+
+
+            // <a href="javascript:stop();playTone(tones['e']);" class="sign" style="color:#F5E652">☿︎</a> 
+            // <a href="javascript:stop();playTone(tones['gs']);" class="sign" style="color:#264AA9">☾︎︎</a> 
+            // <a href="javascript:stop();playTone(tones['fs']);" class="sign" style="color:#397351">♀︎︎︎</a> 
+            // <a href="javascript:stop();playTone(tones['d']);" class="sign" style="color:#E65C29">☉︎︎︎︎</a> 
+            // <a href="javascript:stop();playTone(tones['as']);" class="sign" style="color:#3C2070">♃︎︎︎︎︎</a> 
+            // <a href="javascript:stop();playTone(tones['c']);" class="sign" style="color:#AC2721">♂︎︎︎︎︎</a> 
+            // <a href="javascript:stop();playTone(tones['a']);" class="sign" style="color:#3C409E">♄︎︎</a>
+
+            var names = {
+                "stars": [
+                    ["♄︎", "a", ""],
+                    ["☉︎︎︎︎", "d", ""],
+                    ["♂", "c", ""],
+                    ["♃", "as", ""],
+                    ["♀", "fs", ""],
+                    ["☾", "gs", ""],
+                    ["☿", "e", ""],
+                ],
+                "eheyeh": [
+                    ["א", "e", "eh"],
+                    ["ה", "c", "eh"],
+                    ["ו", "f", "hay"],
+                    ["ה", "c", "yeh"],
+                ],
+                "yhwh": [
+                    ["י", "e", "yod"],
+                    ["ה", "c", "hey"],
+                    ["ו", "cs", "wah"],
+                    ["ה", "c", "hey"],
+                ],
+                "elohim": [
+                    ["א", "e", "eh"],
+                    ["ל", "fs", "lo"],
+                    ["ה", "c", "hee"],
+                    ["ו", "f", "ee"],
+                    ["ם", "gs", "mmmm"],
+                ],
+                "adonai": [
+                    ["א", "e", "ah"],
+                    ["ד", "fs", "doh"],
+                    ["נ", "g", "nah"],
+                    ["ו", "f", "ee"],
+                ],
+            }
+
+            var index = 0;
+            var name = null;
+
+            var audio = null;
+
+            function meditation(new_name) {
+                index = 0;
+                name = new_name;
+
+                var meditation = document.getElementById("meditation");
+                meditation.style.display = "block";
+
+                var note = tones[names[name][index][1]]
+                playTone(note);
+
+                refresh()
+            }
+
+            function refresh() {
+                var meditation = document.getElementById("meditation");
+                meditation.style.background = colors[notes[names[name][index][1]]];
+
+                var letter = document.getElementById("letter");
+                letter.innerHTML = names[name][index][0];
+                
+                var pronunciation = document.getElementById("pronunciation");
+                pronunciation.innerHTML = names[name][index][2];
+
+                var note = tones[names[name][index][1]]
+                oscillator.frequency.setValueAtTime(note, audioCtx.currentTime);
+            }
+
+            function next() {
+                if (name == null) {
+                    end();
+                    return;
+                }
+
+                if (index >= names[name].length-1) {
+                    end()
+                    return;
+                }
+
+                index = index + 1;
+                refresh();
+            }
+
+            function end() {
+                stop()
+
+                var meditation = document.getElementById("meditation");
+                meditation.style.display = "none";
+
+                index = 0;
+                name = null;
+            }
+
+        </script>
+    </head>
+    <body>
+          <nav class="bg-
+
+          <!--
+            var notes = {
+                "c": "red",
+                "cs": "red-orange",
+                "d": "orange",
+                "ds": "orange-yellow",
+                "e": "yellow",
+                "f": "yellow-green",
+                "fs": "green",
+                "g": "green-blue",
+                "gs": "blue",
+                "a": "blue-violet",
+                "as": "violet",
+                "b": "violet-red",
+            }
+            var colors = {
+                "red": "#AC2721",
+                "red-orange": "#B92D1C",
+                "orange": "#E65C29",
+                "orange-yellow": "#E78732",
+                "yellow": "#F5E652",
+                "yellow-green": "#75AC4A",
+                "green": "#397351",
+                "green-blue": "#30608D",
+                "blue": "#264AA9",
+                "blue-violet": "#3C409E",
+                "violet": "#3C2070",
+                "violet-red": "#5B206B",
+            }
+                -->
+
+        <div id="meditation" class="noselect" onclick="next()">
+            <div id="letter"></div>
+            <div id="pronunciation"></div>
+        </div>
+
+        <center>
+            <br/>
+         <div class="names">
+            <a href="javascript:meditation('stars')" style="font-size:2em;font-weight:900">7 Stars Meditation</a><br/>
+         </div>
+         <br/><br/>
+
+            <h1>Signs</h1>
+          <div class="sign" style="color:#AC2721">♈︎</div> 
+          <div class="sign" style="color:#B92D1C">♉︎︎</div> 
+          <div class="sign" style="color:#E65C29">♊︎︎︎</div> 
+          <div class="sign" style="color:#E78732">♋︎︎︎︎</div> 
+          <div class="sign" style="color:#F5E652">♌︎︎︎︎︎</div> 
+          <div class="sign" style="color:#75AC4A">♍︎︎︎︎︎︎</div> 
+          <br/>
+          <div class="sign" style="color:#397351">︎♎︎</div> 
+          <div class="sign" style="color:#30608D">︎♏︎︎</div> 
+          <div class="sign" style="color:#264AA9">︎♐︎︎︎</div> 
+          <div class="sign" style="color:#3C409E">︎♑︎︎︎</div> 
+          <div class="sign" style="color:#3C2070">︎♒︎︎︎︎</div> 
+          <div class="sign" style="color:#5B206B">︎♓︎︎︎︎︎</div> 
+          <br/><br/>
+            <h1>Planets</h1>
+
+            <a href="javascript:stop();playTone(tones['e']);" class="sign" style="color:#F5E652">☿︎</a> 
+            <a href="javascript:stop();playTone(tones['gs']);" class="sign" style="color:#264AA9">☾︎︎</a> 
+            <a href="javascript:stop();playTone(tones['fs']);" class="sign" style="color:#397351">♀︎︎︎</a> 
+            <a href="javascript:stop();playTone(tones['d']);" class="sign" style="color:#E65C29">☉︎︎︎︎</a> 
+            <a href="javascript:stop();playTone(tones['as']);" class="sign" style="color:#3C2070">♃︎︎︎︎︎</a> 
+            <a href="javascript:stop();playTone(tones['c']);" class="sign" style="color:#AC2721">♂︎︎︎︎︎</a> 
+            <a href="javascript:stop();playTone(tones['a']);" class="sign" style="color:#3C409E">♄︎︎</a>
+        </center>
+
+    </body>
+    <script>
+        //meditation('stars');
+    </script>
+</html>
