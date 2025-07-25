@@ -273,7 +273,7 @@
         <center>
             <br/>
          <div class="names">
-            <a href="#" id="playLink" style="font-size:2em;font-weight:900">7 Stars Meditation</a><br/>
+            <a href="#" id="playLink" style="font-size:2em;font-weight:900">7 Stars Meditation 1</a><br/>
          </div>
          <br/><br/>
 
@@ -307,8 +307,15 @@
     <script>
         //meditation('stars');
         // Attach to actual user interaction
-        document.getElementById('playLink').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default anchor behavior
+        document.getElementById('playLink').addEventListener('click', async function(event) {
+            event.preventDefault();
+
+            // ⚠️ Resume AudioContext inside this user gesture
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+
+            // ✅ Now it's safe to play audio
             meditation("stars");
         });
     </script>
